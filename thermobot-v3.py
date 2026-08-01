@@ -1327,14 +1327,12 @@ class ThermoBot(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        # Sync to your server. Change the ID or add more guilds if needed.
-        guild = discord.Object(id=1522441100076515429)
-        self.tree.copy_global_to(guild=guild)
-        synced = await self.tree.sync(guild=guild)
-        print(f"✅ Synced {len(synced)} commands to your server:")
-        for cmd in synced:
-            print(f"   /{cmd.name}")
-
+    # Global sync — works on every server the bot is in
+    # (can take up to ~1 hour to fully propagate the first time)
+    synced = await self.tree.sync()
+    print(f"✅ Globally synced {len(synced)} commands:")
+    for cmd in synced:
+        print(f"   /{cmd.name}")
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
