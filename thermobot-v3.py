@@ -4,9 +4,7 @@ from discord.ui import Button, View, Select
 import random
 import os
 
-# ============================================================
 # THERMODYNAMICS QUESTIONS
-# ============================================================
 QUESTIONS = {
     "Laws of Thermodynamics": {
         "Novice": [
