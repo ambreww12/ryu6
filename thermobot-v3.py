@@ -1411,5 +1411,59 @@ async def coinflip(interaction: discord.Interaction):
     result = random.choice(["Heads", "Tails"])
     await interaction.response.send_message(f"🪙 The coin landed on **{result}**!")
 
+@client.tree.command(name="simvault", description="Open SimVault cases (1–10)")
+@app_commands.describe(amount="How many cases to open (1-10)")
+async def simvault(interaction: discord.Interaction, amount: app_commands.Range[int, 1, 10]):
+    results = {
+        "Solid Gold": 0,
+        "Vault Door": 0,
+        "Gazillionaire": 0,
+        "Bullion": 0,
+        "Nothing": 0
+    }
+
+    for _ in range(amount):
+        roll = random.random()  # 0.0 to 1.0
+
+        if roll < 0.01:
+            results["Solid Gold"] += 1
+        elif roll < 0.02:
+            results["Vault Door"] += 1
+        elif roll < 0.03:
+            results["Gazillionaire"] += 1
+        elif roll < 0.04:
+            results["Bullion"] += 1
+        else:
+            results["Nothing"] += 1
+
+    # Build the response
+    lines = [f"**Opened {amount} SimVault case{'s' if amount > 1 else ''}:**\n"]
+
+    if results["Solid Gold"]:
+        lines.append(f"🟡 **Solid Gold** × {results['Solid Gold']}")
+    if results["Vault Door"]:
+        lines.append(f"🚪 **Vault Door** × {results['Vault Door']}")
+    if results["Gazillionaire"]:
+        lines.append(f"💰 **Gazillionaire** × {results['Gazillionaire']}")
+    if results["Bullion"]:
+        lines.append(f"🪙 **Bullion** × {results['Bullion']}")
+    if results["Nothing"]:
+        lines.append(f"📦 Nothing × {results['Nothing']}")
+
+    # Extra flavor if they hit something rare
+    rares = results["Solid Gold"] + results["Vault Door"] + results["Gazillionaire"] + results["Bullion"]
+    if rares == 0:
+        lines.append("\n*Better luck next time...*")
+    elif rares >= 2:
+        lines.append(f"\n🔥 **{rares} rares in one pull!**")
+
+    embed = discord.Embed(
+        title="🏦 SimVault Opening",
+        description="\n".join(lines),
+        color=0xF59E0B  # gold-ish color
+    )
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}")
+
+    await interaction.response.send_message(embed=embed)
 
 client.run(os.getenv("DISCORD_TOKEN"))
