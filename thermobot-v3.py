@@ -337,9 +337,7 @@ QUESTIONS = {
         "Impossible": []
     }
 }
-# ============================================================
-# ANATOMY & PHYSIOLOGY QUESTIONS
-# ============================================================
+# ANATPHY QUESTIONS
 QUESTIONS_ANATPHY = {
     "Nervous": {
         "Novice": [
@@ -859,9 +857,7 @@ QUESTIONS_ANATPHY = {
     }
 }
 
-# ============================================================
-# WATER QUALITY QUESTIONS (2026 Freshwater)
-# ============================================================
+# WQ QUESTIONS (2026 Freshwater)
 QUESTIONS_WATER = {
     "Freshwater Ecology": {
         "Novice": [
