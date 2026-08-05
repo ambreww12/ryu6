@@ -1404,8 +1404,8 @@ async def wq(interaction: discord.Interaction):
 async def coinflip(interaction: discord.Interaction):
     if False:
         # was gonna be an easter egg here with a 1% chance
+        pass
     else:
-        # fair flip for everyone else
         result = "Heads" if Random.random() < 0.5 else "Tails"
     
     await interaction.response.send_message(f"🪙 The coin landed on **{result}**!")
