@@ -1402,11 +1402,15 @@ async def wq(interaction: discord.Interaction):
 
 @client.tree.command(name="coinflip", description="Flip a coin")
 async def coinflip(interaction: discord.Interaction):
-    if False:
-        # was gonna be an easter egg here with a 1% chance
-        pass
+    if interaction.user.id == 1320177605848203403:
+        # only this guy gets the special treatment
+        result = "Heads"
+        if Random.random() >= 0.99:
+            # bro got fucked over by god :skull:
+            result = "Tails"
     else:
-        result = "Heads" if random.random() < 0.5 else "Tails"
+        # normal fair flip for everyone else
+        result = "Heads" if Random.random() < 0.5 else "Tails"
     
     await interaction.response.send_message(f"🪙 The coin landed on **{result}**!")
     
