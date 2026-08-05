@@ -1402,9 +1402,18 @@ async def wq(interaction: discord.Interaction):
 
 @client.tree.command(name="coinflip", description="Flip a coin")
 async def coinflip(interaction: discord.Interaction):
-    result = random.choice(["Heads", "Tails"])
+    if interaction.user.id == 1320177605848203403:
+        # this guy gets the special treatment
+        result = "Heads"
+        if Random.random() >= 0.99:
+            # bro got fucked over by god :skull:
+            result = "Tails"
+    else:
+        # fair flip for everyone else
+        result = "Heads" if Random.random() < 0.5 else "Tails"
+    
     await interaction.response.send_message(f"🪙 The coin landed on **{result}**!")
-
+    
 @client.tree.command(name="simvault", description="Open SimVault cases (1–10)")
 @app_commands.describe(amount="How many cases to open (1-10)")
 async def simvault(interaction: discord.Interaction, amount: app_commands.Range[int, 1, 10]):
