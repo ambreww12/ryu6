@@ -1406,7 +1406,7 @@ async def coinflip(interaction: discord.Interaction):
         # was gonna be an easter egg here with a 1% chance
         pass
     else:
-        result = "Heads" if Random.random() < 0.5 else "Tails"
+        result = "Heads" if random.random() < 0.5 else "Tails"
     
     await interaction.response.send_message(f"🪙 The coin landed on **{result}**!")
     
