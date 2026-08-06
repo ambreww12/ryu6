@@ -1739,4 +1739,109 @@ async def ryu6help(interaction: discord.Interaction):
 
     embed.set_footer(text=f"Requested by {interaction.user.display_name}")
     await interaction.response.send_message(embed=embed)
+# ============================================================
+# PROFANITY SCANNER
+# ============================================================
+# Normal swear words — shown fully
+BAD_WORDS = {
+    "fuck", "fucking", "fucked", "fucker", "motherfucker", "motherfucking",
+    "shit", "shitty", "bullshit", "shithead",
+    "bitch", "bitches", "bitching",
+    "ass", "asshole", "assholes",
+    "cunt", "cunts",
+    "dick", "dickhead", "dicks",
+    "cock", "cocksucker", "cocksuckers",
+    "pussy", "pussies",
+    "bastard", "bastards",
+    "whore", "whores",
+    "slut", "sluts",
+    "damn", "damned", "goddamn", "goddamned",
+    "hell",
+    "piss", "pissed",
+    "twat", "twats",
+    "prick", "pricks",
+    "bollocks", "bugger",
+    "wanker", "wank",
+    "tit", "tits",
+    "cum", "jizz",
+    "pussyfuck",
+}
+
+# Actual slurs — these get censored
+SLURS = {
+    "nigger", "nigga",
+    "retard", "retarded",
+    "fag", "faggot",
+}
+
+def censor_slur(word: str) -> str:
+    """Censor only slurs (keep first + last letter)."""
+    w = word.lower()
+    if len(w) <= 2:
+        return w[0] + "*"
+    return w[0] + "*" * (len(w) - 2) + w[-1]
+
+
+@client.tree.command(name="checkprofanity", description="Scan a user's recent public messages for profanity counts")
+@app_commands.describe(user="The user whose messages to scan")
+async def checkprofanity(interaction: discord.Interaction, user: discord.Member):
+    await interaction.response.defer(thinking=True)
+
+    if not interaction.guild:
+        await interaction.followup.send("This command only works in a server.")
+        return
+
+    # Combine both sets for counting
+    all_targets = BAD_WORDS | SLURS
+    counts = {word: 0 for word in all_targets}
+    messages_scanned = 0
+    channels_scanned = 0
+
+    for channel in interaction.guild.text_channels:
+        perms = channel.permissions_for(interaction.guild.me)
+        if not (perms.read_messages and perms.read_message_history):
+            continue
+
+        channels_scanned += 1
+        try:
+            async for msg in channel.history(limit=800):
+                if msg.author.id != user.id or not msg.content:
+                    continue
+                messages_scanned += 1
+                words = msg.content.lower().replace("\n", " ").split()
+                for w in words:
+                    cleaned = w.strip(".,!?;:\"'()[]{}<>")
+                    if cleaned in counts:
+                        counts[cleaned] += 1
+        except (discord.Forbidden, discord.HTTPException):
+            continue
+
+    results = [(word, count) for word, count in counts.items() if count > 0]
+    results.sort(key=lambda x: x[1], reverse=True)
+
+    if not results:
+        await interaction.followup.send(
+            f"No matching profanity found for {user.mention} "
+            f"in the last ~800 messages of {channels_scanned} public channels "
+            f"({messages_scanned} of their messages scanned)."
+        )
+        return
+
+    lines = ["**Word**               **# of times**"]
+    lines.append("─" * 34)
+    for word, count in results:
+        display = censor_slur(word) if word in SLURS else word
+        lines.append(f"{display:<22} {count}")
+
+    table = "```\n" + "\n".join(lines) + "\n```"
+
+    embed = discord.Embed(
+        title=f"🤬 Profanity Report — {user.display_name}",
+        description=table,
+        color=0xDC2626
+    )
+    embed.set_footer(
+        text=f"Scanned {messages_scanned} messages across {channels_scanned} public channels (last ~800 msgs each) • Requested by {interaction.user.display_name}"
+    )
+    await interaction.followup.send(embed=embed)
 client.run(os.getenv("DISCORD_TOKEN"))
