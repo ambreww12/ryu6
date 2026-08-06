@@ -29,12 +29,19 @@ def save_points(data: dict):
     with open(POINTS_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
+# Only this server is allowed to modify leaderboard points
+ALLOWED_POINTS_SERVER_ID = 1530684056931533002
+
 def can_award(interaction: discord.Interaction, leaderboard: str) -> bool:
     """Admins can award on either board.
     Thermo Mods can award only on thermo.
     Circuit Mods can award only on circuit.
+    Modifications are ONLY allowed in the designated server.
     """
     if not interaction.guild:
+        return False
+    # Restrict point modifications to one specific server
+    if interaction.guild.id != ALLOWED_POINTS_SERVER_ID:
         return False
     member = interaction.user
     if not isinstance(member, discord.Member):
@@ -1524,7 +1531,7 @@ async def simvault(interaction: discord.Interaction, amount: app_commands.Range[
 # LEADERBOARD / POINTS COMMANDS
 # ============================================================
 
-@client.tree.command(name="awardpoint", description="Award (or deduct) points — admins / thermo mods / circuit mods only")
+@client.tree.command(name="awardpoint", description="Award (or deduct) points — only in the designated server, by admins / thermo mods / circuit mods")
 @app_commands.describe(
     leaderboard="Which leaderboard to modify",
     user="The member to give points to",
@@ -1545,7 +1552,8 @@ async def awardpoint(
     if not can_award(interaction, board):
         await interaction.response.send_message(
             "❌ You do not have permission to award points on this leaderboard.\n"
-            "Required: **Administrator**, **Thermo Mod**, or **Circuit Mod** (matching the board).",
+            "• Point modifications are **only allowed** in the designated server.\n"
+            "• Required roles (in that server): **Administrator**, **Thermo Mod**, or **Circuit Mod** (matching the board).",
             ephemeral=True
         )
         return
@@ -1623,6 +1631,42 @@ async def self_cmd(interaction: discord.Interaction):
     embed.add_field(name="⚡ Circuit", value=f"**{circuit_pts}** pts", inline=True)
     embed.set_footer(text="Use /leaderboard to see the top 5")
     await interaction.response.send_message(embed=embed)
+
+
+@client.tree.command(name="fullleaderstats", description="Show every person with a nonzero score on all leaderboards")
+async def fullleaderstats(interaction: discord.Interaction):
+    data = load_points()
+
+    def build_lines(board: str) -> list[str]:
+        scores = {uid: pts for uid, pts in data.get(board, {}).items() if pts != 0}
+        if not scores:
+            return ["*No one has nonzero points yet.*"]
+        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        lines = []
+        for rank, (uid, pts) in enumerate(sorted_scores, start=1):
+            member = interaction.guild.get_member(int(uid)) if interaction.guild else None
+            name = member.display_name if member else f"User {uid}"
+            lines.append(f"**{rank}.** {name} — **{pts}** pts")
+        return lines
+
+    thermo_lines = build_lines("thermo")
+    circuit_lines = build_lines("circuit")
+
+    embed_thermo = discord.Embed(
+        title="🔥 Thermo — Full Leaderboard (nonzero scores)",
+        description="\n".join(thermo_lines),
+        color=0xE85D04
+    )
+    embed_thermo.set_footer(text=f"Requested by {interaction.user.display_name}")
+
+    embed_circuit = discord.Embed(
+        title="⚡ Circuit — Full Leaderboard (nonzero scores)",
+        description="\n".join(circuit_lines),
+        color=0x6366F1
+    )
+    embed_circuit.set_footer(text=f"Requested by {interaction.user.display_name}")
+
+    await interaction.response.send_message(embeds=[embed_thermo, embed_circuit])
 
 
 client.run(os.getenv("DISCORD_TOKEN"))
