@@ -1668,5 +1668,75 @@ async def fullleaderstats(interaction: discord.Interaction):
 
     await interaction.response.send_message(embeds=[embed_thermo, embed_circuit])
 
+@client.tree.command(name="ryu6help", description="Show all commands and an overview of the bot")
+async def ryu6help(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="📚 Ryu6 Bot — Help & Overview",
+        description=(
+            "Practice **Science Olympiad** questions and more!\n"
+            "Questions support category + difficulty selection (Novice → Impossible).\n"
+            "Only the person who requested a question can answer it with the buttons."
+        ),
+        color=0x5865F2
+    )
 
+    embed.add_field(
+        name="🔥 Thermodynamics",
+        value=(
+            "`/thermo` — Get a thermodynamics question\n"
+            "`/random` — Alias for `/thermo`"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="🧬 Anatomy & Physiology",
+        value="`/anatphy` — Get an A&P question (SciOly style)",
+        inline=False
+    )
+
+    embed.add_field(
+        name="💧 Water Quality (2026 Freshwater)",
+        value=(
+            "`/waterquality` — Get a Water Quality question\n"
+            "`/wq` — Alias for `/waterquality`\n"
+            "*Categories: Freshwater Ecology, Macroinvertebrates, Chemistry & Monitoring, "
+            "Water Treatment, Pollution & Human Impacts, Invasive / Nuisance Species*"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="🎲 Fun / Utility",
+        value=(
+            "`/coinflip` — Flip a coin\n"
+            "`/simvault [1-10]` — Open SimVault cases (try your luck!)"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="🏆 Points & Leaderboards",
+        value=(
+            "`/leaderboard` — Top 5 on thermo or circuit board\n"
+            "`/self` — Check your own points on both boards\n"
+            "`/fullleaderstats` — Full list of everyone with nonzero scores\n"
+            "`/awardpoint` — Award or deduct points *(Admins / Thermo Mod / Circuit Mod only, "
+            "and only in the designated server)*"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="ℹ️ Notes",
+        value=(
+            "• Difficulties: 🟢 Novice · 🟡 Intermediate · 🟠 Hard · 🔴 Very Hard · 🟣 Impossible\n"
+            "• Point awards are restricted to one specific server and require the proper roles.\n"
+            "• Use this command anytime with `/ryu6help`"
+        ),
+        inline=False
+    )
+
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}")
+    await interaction.response.send_message(embed=embed)
 client.run(os.getenv("DISCORD_TOKEN"))
