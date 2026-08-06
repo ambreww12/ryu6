@@ -1471,7 +1471,7 @@ async def coinflip(interaction: discord.Interaction):
     
     await interaction.response.send_message(f"🪙 The coin landed on **{result}**!")
     
-@client.tree.command(name="simvault", description="Open SimVault cases (1–10)")
+@client.tree.command(name="simvault", description="Simulate Scio.ly Vault Openings (1–10)")
 @app_commands.describe(amount="How many cases to open (1-10)")
 async def simvault(interaction: discord.Interaction, amount: app_commands.Range[int, 1, 10]):
     results = {
@@ -1497,7 +1497,7 @@ async def simvault(interaction: discord.Interaction, amount: app_commands.Range[
             results["Nothing"] += 1
 
     # Build the response
-    lines = [f"**Opened {amount} SimVault case{'s' if amount > 1 else ''}:**\n"]
+    lines = [f"**Opened {amount} Vault {'s' if amount > 1 else ''}:**\n"]
 
     if results["Solid Gold"]:
         lines.append(f"🟡 **Solid Gold** × {results['Solid Gold']}")
@@ -1510,7 +1510,7 @@ async def simvault(interaction: discord.Interaction, amount: app_commands.Range[
     if results["Nothing"]:
         lines.append(f"📦 Nothing × {results['Nothing']}")
 
-    # Extra flavor if they hit something rare
+    # Extra flavour if they hit smth rare
     rares = results["Solid Gold"] + results["Vault Door"] + results["Gazillionaire"] + results["Bullion"]
     if rares == 0:
         lines.append("\n*Better luck next time...*")
@@ -1518,7 +1518,7 @@ async def simvault(interaction: discord.Interaction, amount: app_commands.Range[
         lines.append(f"\n🔥 **{rares} rares in one pull!**")
 
     embed = discord.Embed(
-        title="🏦 SimVault Opening",
+        title="🏦 Simulated Vault Opening",
         description="\n".join(lines),
         color=0xF59E0B  # gold-ish color
     )
@@ -1675,7 +1675,7 @@ async def ryu6help(interaction: discord.Interaction):
         description=(
             "Practice **Science Olympiad** questions and more!\n"
             "Questions support category + difficulty selection (Novice → Impossible).\n"
-            "Only the person who requested a question can answer it with the buttons."
+            "Only the person who requested a question can answer it with the buttons. What the user answered becomes public, and the correct answer gets revealed."
         ),
         color=0x5865F2
     )
@@ -1710,7 +1710,7 @@ async def ryu6help(interaction: discord.Interaction):
         name="🎲 Fun / Utility",
         value=(
             "`/coinflip` — Flip a coin\n"
-            "`/simvault [1-10]` — Open SimVault cases (try your luck!)"
+            "`/simvault [1-10]` — Simulate scio.ly vault openings (try your luck!)"
         ),
         inline=False
     )
