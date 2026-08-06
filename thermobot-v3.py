@@ -3,6 +3,59 @@ from discord import app_commands
 from discord.ui import Button, View, Select
 import random
 import os
+import json
+from pathlib import Path
+
+# ============================================================
+# POINTS / LEADERBOARD SYSTEM
+# ============================================================
+POINTS_FILE = Path("points.json")
+
+def load_points() -> dict:
+    if POINTS_FILE.exists():
+        try:
+            with open(POINTS_FILE, "r") as f:
+                data = json.load(f)
+                if "thermo" not in data:
+                    data["thermo"] = {}
+                if "circuit" not in data:
+                    data["circuit"] = {}
+                return data
+        except Exception:
+            pass
+    return {"thermo": {}, "circuit": {}}
+
+def save_points(data: dict):
+    with open(POINTS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+def can_award(interaction: discord.Interaction, leaderboard: str) -> bool:
+    """Admins can award on either board.
+    Thermo Mods can award only on thermo.
+    Circuit Mods can award only on circuit.
+    """
+    if not interaction.guild:
+        return False
+    member = interaction.user
+    if not isinstance(member, discord.Member):
+        return False
+
+    # Discord Administrator permission always allowed
+    if member.guild_permissions.administrator:
+        return True
+
+    role_names = [r.name.lower() for r in member.roles]
+
+    # Explicit admin-style role names
+    if any(rn in ("admin", "admins", "administrator") for rn in role_names):
+        return True
+
+    if leaderboard == "thermo":
+        return any(("thermo" in rn and "mod" in rn) for rn in role_names)
+    if leaderboard == "circuit":
+        return any(("circuit" in rn and "mod" in rn) for rn in role_names)
+    return False
+
 
 # THERMODYNAMICS QUESTIONS
 QUESTIONS = {
@@ -1023,7 +1076,7 @@ QUESTIONS_WATER = {
             ("Nitrification in wastewater treatment converts ammonia to:", ["Nitrogen gas directly", "Nitrite then nitrate", "Organic nitrogen", "Phosphate"], 1),
             ("Denitrification requires:", ["Aerobic conditions", "Anoxic conditions and a carbon source to convert nitrate to nitrogen gas", "Only high oxygen", "Only chlorine"], 1),
             ("Chemical precipitation of phosphorus often uses:", ["Chlorine", "Iron or aluminum salts", "Only UV", "Sodium chloride"], 1),
-            ("A major advantage of membrane bioreactors (MBRs) is:", ["They require no energy", "They can produce high-quality effluent with a small footprint", "They only do primary treatment", "They eliminate the need for any disinfection"], 1),
+            ("A major advantage of membrane bioreactors (MBRs) is:", ["They require no energy", "They can produce high-quality effluent with a small footprint", "They eliminate the need for any disinfection"], 1),
             ("The purpose of a grit chamber is to:", ["Grow bacteria", "Remove heavy inorganic particles (sand, gravel) by settling", "Disinfect the water", "Remove dissolved nutrients"], 1),
             ("Which of the following is true of combined sewer overflows (CSOs)?", ["They only occur in modern separate systems", "They can discharge untreated or partially treated sewage during heavy rain", "They improve water quality", "They are only used for drinking water"], 1),
             ("In potable water treatment, the CT value refers to:", ["Concentration × time for disinfection effectiveness", "Only temperature", "Conductivity × turbidity", "Only chemical dose"], 0),
@@ -1317,6 +1370,7 @@ class CategoryView(View):
 class ThermoBot(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
+        intents.members = True  # needed to resolve members for leaderboard names
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
 
@@ -1464,5 +1518,111 @@ async def simvault(interaction: discord.Interaction, amount: app_commands.Range[
     embed.set_footer(text=f"Requested by {interaction.user.display_name}")
 
     await interaction.response.send_message(embed=embed)
+
+
+# ============================================================
+# LEADERBOARD / POINTS COMMANDS
+# ============================================================
+
+@client.tree.command(name="awardpoint", description="Award (or deduct) points — admins / thermo mods / circuit mods only")
+@app_commands.describe(
+    leaderboard="Which leaderboard to modify",
+    user="The member to give points to",
+    pts="Points to add (use negative number to deduct)"
+)
+@app_commands.choices(leaderboard=[
+    app_commands.Choice(name="thermo", value="thermo"),
+    app_commands.Choice(name="circuit", value="circuit"),
+])
+async def awardpoint(
+    interaction: discord.Interaction,
+    leaderboard: app_commands.Choice[str],
+    user: discord.Member,
+    pts: int
+):
+    board = leaderboard.value
+
+    if not can_award(interaction, board):
+        await interaction.response.send_message(
+            "❌ You do not have permission to award points on this leaderboard.\n"
+            "Required: **Administrator**, **Thermo Mod**, or **Circuit Mod** (matching the board).",
+            ephemeral=True
+        )
+        return
+
+    data = load_points()
+    uid = str(user.id)
+
+    if uid not in data[board]:
+        data[board][uid] = 0
+
+    data[board][uid] += pts
+    save_points(data)
+
+    new_total = data[board][uid]
+    sign = "+" if pts >= 0 else ""
+    await interaction.response.send_message(
+        f"✅ Awarded **{sign}{pts}** points to {user.mention} on the **{board}** leaderboard.\n"
+        f"New total: **{new_total}** pts"
+    )
+
+
+@client.tree.command(name="leaderboard", description="Show the current top 5 on a leaderboard")
+@app_commands.describe(leaderboard="Which leaderboard to display")
+@app_commands.choices(leaderboard=[
+    app_commands.Choice(name="thermo", value="thermo"),
+    app_commands.Choice(name="circuit", value="circuit"),
+])
+async def leaderboard_cmd(
+    interaction: discord.Interaction,
+    leaderboard: app_commands.Choice[str]
+):
+    board = leaderboard.value
+    data = load_points()
+    scores = data.get(board, {})
+
+    if not scores:
+        await interaction.response.send_message(
+            f"📭 No points have been recorded on the **{board}** leaderboard yet."
+        )
+        return
+
+    # Sort descending and take top 5
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    embed = discord.Embed(
+        title=f"🏆 {board.capitalize()} Leaderboard — Top 5",
+        color=0xE85D04 if board == "thermo" else 0x6366F1
+    )
+
+    medals = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"]
+    lines = []
+    for i, (uid, pts) in enumerate(sorted_scores):
+        member = interaction.guild.get_member(int(uid)) if interaction.guild else None
+        name = member.display_name if member else f"User {uid}"
+        lines.append(f"{medals[i]} **{name}** — {pts} pts")
+
+    embed.description = "\n".join(lines)
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}")
+    await interaction.response.send_message(embed=embed)
+
+
+@client.tree.command(name="self", description="Show your own points on both leaderboards")
+async def self_cmd(interaction: discord.Interaction):
+    data = load_points()
+    uid = str(interaction.user.id)
+
+    thermo_pts = data["thermo"].get(uid, 0)
+    circuit_pts = data["circuit"].get(uid, 0)
+
+    embed = discord.Embed(
+        title=f"📊 Your Points — {interaction.user.display_name}",
+        color=0x10B981
+    )
+    embed.add_field(name="🔥 Thermo", value=f"**{thermo_pts}** pts", inline=True)
+    embed.add_field(name="⚡ Circuit", value=f"**{circuit_pts}** pts", inline=True)
+    embed.set_footer(text="Use /leaderboard to see the top 5")
+    await interaction.response.send_message(embed=embed)
+
 
 client.run(os.getenv("DISCORD_TOKEN"))
