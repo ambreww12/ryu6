@@ -1710,6 +1710,7 @@ async def ryu6help(interaction: discord.Interaction):
         name="🎲 Fun / Utility",
         value=(
             "`/coinflip` — Flip a coin\n"
+            "`/checkprofanity` — Check the profanity usage of a user\n"
             "`/simvault [1-10]` — Simulate scio.ly vault openings (try your luck!)"
         ),
         inline=False
@@ -1790,6 +1791,7 @@ BAD_WORDS = {
     "dipshit",
     "dumbshit",
     "shite",
+    "ts",
 
     # Bitch family
     "bitch", "bitches",
@@ -1880,6 +1882,7 @@ BAD_WORDS = {
     "pissing",
     "pisser",
     "pisshead",
+    "pmo"
 
     # British
     "prick", "pricks",
