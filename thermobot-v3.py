@@ -1748,6 +1748,7 @@ BAD_WORDS = {
     "fuck", "fucks", "fucking", "fucked", "fucker", "fuckers",
     "motherfucker", "motherfuckers", "motherfucking",
     "motherfuckingly",
+    "fuckass",
     "fuckface", "fuckfaces",
     "fuckhead", "fuckheads",
     "fuckwit", "fuckwits",
@@ -1904,6 +1905,9 @@ BAD_WORDS = {
     "jerkoff", "jerkoffs",
     "nutjob", "nutjobs",
     "dipshit",
+
+    # The worst slur of them all (I have beef with the engineering cad server owners)
+    "engineeringcad",
 }
 # Actual slurs — these get censored harder / treated more strictly
 SLURS = {
