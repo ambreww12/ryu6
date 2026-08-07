@@ -1745,9 +1745,9 @@ async def ryu6help(interaction: discord.Interaction):
 # Normal swear words — shown fully
 BAD_WORDS = {
     "fuck", "fucking", "fucked", "fucker", "motherfucker", "motherfucking",
-    "shit", "shitty", "bullshit", "shithead",
+    "shit", "shitty", "bullshit", "shithead", "mf",
     "bitch", "bitches", "bitching",
-    "ass", "asshole", "assholes",
+    "ass", "asshole", "assholes", "assfuck",
     "cunt", "cunts",
     "dick", "dickhead", "dicks",
     "cock", "cocksucker", "cocksuckers",
@@ -1763,8 +1763,8 @@ BAD_WORDS = {
     "bollocks", "bugger",
     "wanker", "wank",
     "tit", "tits",
-    "cum", "jizz",
-    "pussyfuck",
+    "cum", "jizz", "cuck",
+    "pussyfuck", 
 }
 
 # Actual slurs — these get censored
