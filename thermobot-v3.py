@@ -1748,7 +1748,7 @@ BAD_WORDS = {
     "fuck", "fucks", "fucking", "fucked", "fucker", "fuckers",
     "motherfucker", "motherfuckers", "motherfucking",
     "motherfuckingly",
-    "fahh",
+    "fahh","fahhh","fahhhh","fahhhhh","fahhhhhh",
     "fuckass",
     "fuckface", "fuckfaces",
     "fuckhead", "fuckheads",
@@ -1868,6 +1868,7 @@ BAD_WORDS = {
 
     # Religious
     "damn", "damned",
+    "dayum",
     "dammit",
     "goddamn",
     "goddammit",
@@ -1903,6 +1904,7 @@ BAD_WORDS = {
     "porno",
     "pornography",
     "pornographical",
+    "xxx", "nsfw", "hentai", "onlyfans", "pornhub","hub","phub",
     "smut",
 
     # General insults
@@ -1914,7 +1916,7 @@ BAD_WORDS = {
     "dipshit",
 
     # The worst bad word of them all (I have beef with the engineering cad server owners)
-    "engineeringcad", "engineering cad",
+    "engineeringcad", "engineering cad", "engicad", "engi cad", "engie cad", "engiecad",
 }
 # Actual slurs — these get censored harder / treated more strictly
 SLURS = {
