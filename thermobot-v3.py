@@ -1867,7 +1867,8 @@ BAD_WORDS = {
     "skank", "skanks",
     "tramp", "tramps",
     "hoe", "hoes",
-
+    "thot","thots",
+    
     # Religious
     "damn", "damned",
     "dayum",
