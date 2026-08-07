@@ -1744,36 +1744,89 @@ async def ryu6help(interaction: discord.Interaction):
 # ============================================================
 # Normal swear words — shown fully
 BAD_WORDS = {
-    "fuck", "fucking", "fucked", "fucker", "motherfucker", "motherfucking",
-    "shit", "shitty", "bullshit", "shithead", "mf",
-    "bitch", "bitches", "bitching",
-    "ass", "asshole", "assholes", "assfuck",
-    "cunt", "cunts",
-    "dick", "dickhead", "dicks",
-    "cock", "cocksucker", "cocksuckers",
-    "pussy", "pussies",
+    # Fuck family
+    "fuck", "fucking", "fucked", "fucker", "fuckers", "motherfucker", "motherfucking",
+    "motherfuckers", "mf", "mfer", "stfu", "sybau", "syfm", "gtfo", "wtf", "omfg",
+    "fuckface", "fuckwit", "fuckhead", "clusterfuck", "fuckboy", "fuckboys",
+
+    # Shit family
+    "shit", "shitty", "bullshit", "shithead", "shitheads", "shite", "shitface",
+    "shitbag", "shitbags", "shitshow", "apeshit", "horseshit", "dogshit",
+
+    # Bitch family
+    "bitch", "bitches", "bitching", "bitchy", "sonofabitch", "sob",
+
+    # Ass family
+    "ass", "asses", "asshole", "assholes", "assfuck", "assfucker", "asshat",
+    "asswipe", "asswipes", "dumbass", "smartass", "jackass", "badass",
+    "arse", "arses", "arsehole", "arseholes",
+
+    # Dick family
+    "dick", "dicks", "dickhead", "dickheads", "dickwad", "dickweed", "dickface",
+
+    # Cock family
+    "cock", "cocks", "cocksucker", "cocksuckers", "cockface", "cockhead",
+
+    # Pussy / Cunt family
+    "pussy", "pussies", "pussyfuck",
+    "twat", "twats", "twatwaffle",
+    "cunt", "cunts", "cuntface",
+
+    # Bastard family
     "bastard", "bastards",
-    "whore", "whores",
-    "slut", "sluts",
-    "damn", "damned", "goddamn", "goddamned",
-    "hell",
-    "piss", "pissed",
-    "twat", "twats",
+
+    # Promiscuous / insulting people
+    "whore", "whores", "whoring",
+    "slut", "sluts", "slutty",
+    "skank", "skanks", "tramp", "tramps",
+
+    # God / religious family
+    "damn", "damned", "dammit", "goddamn", "goddamned", "goddammit",
+    "hell", "hellish",
+
+    # Piss family
+    "piss", "pissed", "pissing", "pisshead",
+
+    # Misc body parts / British-style
     "prick", "pricks",
-    "bollocks", "bugger",
-    "wanker", "wank",
-    "tit", "tits",
-    "cum", "jizz", "cuck",
-    "pussyfuck", 
+    "bollocks", "bollock",
+    "bugger", "buggery",
+    "tit", "tits", "titties",
+    "knob", "knobhead", "knobheads",
+    "tosser", "tossers",
+
+    # Master bait / sexual fluid family
+    "wanker", "wankers", "wank", "wanking",
+    "cum", "cums", "cumming", "jizz", "spunk",
+    "cuck", "cucks", "cuckold",
+
+    # Douche / jerk family
+    "douche", "douches", "douchebag", "douchebags", "douchecanoe",
+    "jerk", "jerks", "jerkoff", "jerkoffs",
+    "scumbag", "scumbags",
+    "nutjob", "nutjobs",
 }
 
-# Actual slurs — these get censored
+# Actual slurs — these get censored harder / treated more strictly
 SLURS = {
-    "nigger", "nigga",
-    "retard", "retarded",
-    "fag", "faggot",
-}
+    # Racial
+    "nigger", "niggers", "nigga", "niggas", "niggah",
+    "coon", "coons",
+    "spic", "spics", "wetback", "wetbacks", "beaner", "beaners",
+    "chink", "chinks", "gook", "gooks",
+    "kike", "kikes",
+    "towelhead", "towelheads", "raghead", "ragheads",
 
+    # Sexual orientation / gender
+    "fag", "fags", "faggot", "faggots", "faggy",
+    "dyke", "dykes",
+    "tranny", "trannies", "shemale", "shemales",
+
+    # Disability / mental
+    "retard", "retards", "retarded", "tard", "tards",
+    "spaz", "spazz", "spastic",
+    "mong", "mongoloid",
+}
 def censor_slur(word: str) -> str:
     """Censor only slurs (keep first + last letter)."""
     w = word.lower()
