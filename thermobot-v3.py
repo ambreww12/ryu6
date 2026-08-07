@@ -1826,6 +1826,7 @@ BAD_WORDS = {
     "hardass",
     "arse", "arses",
     "arsehole", "arseholes",
+    "lmao",
 
     # Dick family
     "dick", "dicks",
