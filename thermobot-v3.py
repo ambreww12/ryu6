@@ -1901,6 +1901,7 @@ BAD_WORDS = {
     "spunk",
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
+    "crack", "cracked", "cracking", 
 
     # Porn family
     "porn",
@@ -1937,6 +1938,7 @@ SLURS = {
     "chink", "chinks", "gook", "gooks",
     "kike", "kikes",
     "towelhead", "towelheads", "raghead", "ragheads",
+    "cracker",
 
     # Sexual orientation / gender
     "fag", "fags", "faggot", "faggots", "faggy",
