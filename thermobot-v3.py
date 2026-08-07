@@ -1882,7 +1882,7 @@ BAD_WORDS = {
     "pissing",
     "pisser",
     "pisshead",
-    "pmo"
+    "pmo",
 
     # British
     "prick", "pricks",
