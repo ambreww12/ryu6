@@ -1923,7 +1923,7 @@ BAD_WORDS = {
     "nutjob", "nutjobs",
 
     # No-space versions
-    "engineeringcad", "engicad", "engiecad", "cornso",
+    "engineeringcad", "engicad", "engiecad", "engcad","cornso",
 }
 
 # Multi-word phrases (these need special handling)
@@ -1931,6 +1931,7 @@ MULTI_WORD_BAD = {
     "engineering cad",
     "engi cad",
     "engie cad",
+    "eng cad",
 }
 
 # Actual slurs — these get censored harder / treated more strictly
