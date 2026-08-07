@@ -1745,68 +1745,166 @@ async def ryu6help(interaction: discord.Interaction):
 # Normal swear words — shown fully
 BAD_WORDS = {
     # Fuck family
-    "fuck", "fucking", "fucked", "fucker", "fuckers", "motherfucker", "motherfucking",
-    "motherfuckers", "mf", "mfer", "stfu", "sybau", "syfm", "gtfo", "wtf", "omfg",
-    "fuckface", "fuckwit", "fuckhead", "clusterfuck", "fuckboy", "fuckboys",
+    "fuck", "fucks", "fucking", "fucked", "fucker", "fuckers",
+    "motherfucker", "motherfuckers", "motherfucking",
+    "motherfuckingly",
+    "fuckface", "fuckfaces",
+    "fuckhead", "fuckheads",
+    "fuckwit", "fuckwits",
+    "fuckstick",
+    "fuckboy", "fuckboys",
+    "fuckgirl", "fuckgirls",
+    "fuckup", "fuckups",
+    "fuckoff",
+    "clusterfuck",
+    "dumbfuck",
+    "fuckhole",
+    "fucknut",
+    "fucktard",
+    "absofuckinglutely",
+    "unfuckingbelievable",
+    "fubar",
+    "stfu", "gtfo", "wtf", "omfg", "sybau", "syfm",
+    "mf", "mfer", "mfs",
 
     # Shit family
-    "shit", "shitty", "bullshit", "shithead", "shitheads", "shite", "shitface",
-    "shitbag", "shitbags", "shitshow", "apeshit", "horseshit", "dogshit",
+    "shit", "shits", "shitty", "shittier", "shittiest",
+    "bullshit",
+    "shithead", "shitheads",
+    "shitface",
+    "shitbag", "shitbags",
+    "shitshow",
+    "shitstorm",
+    "shitpost", "shitposting", "shitposter",
+    "shitload",
+    "shitloads",
+    "shithole", "shitholes",
+    "shitstain",
+    "shitfaced",
+    "apeshit",
+    "batshit",
+    "horseshit",
+    "dogshit",
+    "jackshit",
+    "dipshit",
+    "dumbshit",
+    "shite",
 
     # Bitch family
-    "bitch", "bitches", "bitching", "bitchy", "sonofabitch", "sob",
+    "bitch", "bitches",
+    "bitching",
+    "bitchy",
+    "bitchass",
+    "bitchface",
+    "bitchboy",
+    "bitchmade",
+    "sonofabitch",
+    "sob",
 
     # Ass family
-    "ass", "asses", "asshole", "assholes", "assfuck", "assfucker", "asshat",
-    "asswipe", "asswipes", "dumbass", "smartass", "jackass", "badass",
-    "arse", "arses", "arsehole", "arseholes",
+    "ass", "asses",
+    "asshole", "assholes",
+    "asshat",
+    "asswipe", "asswipes",
+    "assclown",
+    "assbag",
+    "asslicker",
+    "asslick",
+    "assmunch",
+    "assmonkey",
+    "assfuck",
+    "assfucker",
+    "assface",
+    "asshead",
+    "dumbass",
+    "smartass",
+    "jackass",
+    "badass",
+    "hardass",
+    "arse", "arses",
+    "arsehole", "arseholes",
 
     # Dick family
-    "dick", "dicks", "dickhead", "dickheads", "dickwad", "dickweed", "dickface",
+    "dick", "dicks",
+    "dickhead", "dickheads",
+    "dickwad",
+    "dickweed",
+    "dickface",
+    "dickhole",
+    "dickbag",
+    "dipstick",
 
     # Cock family
-    "cock", "cocks", "cocksucker", "cocksuckers", "cockface", "cockhead",
+    "cock", "cocks",
+    "cockhead",
+    "cockface",
+    "cocksucker", "cocksuckers",
+    "cockbite",
+    "cockblock",
+    "cockblocked",
+    "cockblocking",
 
-    # Pussy / Cunt family
-    "pussy", "pussies", "pussyfuck",
-    "twat", "twats", "twatwaffle",
-    "cunt", "cunts", "cuntface",
+    # Pussy / Cunt
+    "pussy", "pussies",
+    "pussyfuck",
+    "twat", "twats",
+    "twatwaffle",
+    "twatface",
+    "cunt", "cunts",
+    "cuntface",
+    "cunty",
 
-    # Bastard family
+    # Bastard
     "bastard", "bastards",
 
-    # Promiscuous / insulting people
+    # Insults
     "whore", "whores", "whoring",
     "slut", "sluts", "slutty",
-    "skank", "skanks", "tramp", "tramps",
+    "skank", "skanks",
+    "tramp", "tramps",
+    "hoe", "hoes",
 
-    # God / religious family
-    "damn", "damned", "dammit", "goddamn", "goddamned", "goddammit",
-    "hell", "hellish",
+    # Religious
+    "damn", "damned",
+    "dammit",
+    "goddamn",
+    "goddammit",
+    "goddamned",
+    "hell",
+    "hellish",
 
-    # Piss family
-    "piss", "pissed", "pissing", "pisshead",
+    # Piss
+    "piss", "pissed",
+    "pissing",
+    "pisser",
+    "pisshead",
 
-    # Misc body parts / British-style
+    # British
     "prick", "pricks",
-    "bollocks", "bollock",
+    "bollock", "bollocks",
     "bugger", "buggery",
-    "tit", "tits", "titties",
-    "knob", "knobhead", "knobheads",
+    "git",
     "tosser", "tossers",
+    "wanker", "wankers",
+    "wank", "wanking",
+    "knob", "knobhead", "knobheads",
 
-    # Master bait / sexual fluid family
-    "wanker", "wankers", "wank", "wanking",
-    "cum", "cums", "cumming", "jizz", "spunk",
+    # Sexual slang
+    "tit", "tits", "titty", "titties",
+    "cum", "cums", "cumming",
+    "jizz",
+    "spunk",
     "cuck", "cucks", "cuckold",
+    "goon", "gooner", "gooning",
 
-    # Douche / jerk family
-    "douche", "douches", "douchebag", "douchebags", "douchecanoe",
-    "jerk", "jerks", "jerkoff", "jerkoffs",
-    "scumbag", "scumbags",
+    # General insults
+    "douche", "douches",
+    "douchebag", "douchebags",
+    "douchecanoe",
+    "jerkoff", "jerkoffs",
     "nutjob", "nutjobs",
+    "dipshit",
 }
-
 # Actual slurs — these get censored harder / treated more strictly
 SLURS = {
     # Racial
