@@ -1750,7 +1750,7 @@ BAD_WORDS = {
     "motherfucker", "motherfuckers", "motherfucking",
     "motherfuckingly",
     "fahh", "fahhh", "fahhhh", "fahhhhh", "fahhhhhh",
-    "fuckass",
+    "fuckass","titfuck","thighfuck","titfucker","thighfucker","titfucking","thighfucking",
     "fuckface", "fuckfaces",
     "fuckhead", "fuckheads",
     "fuckwit", "fuckwits",
@@ -1816,7 +1816,7 @@ BAD_WORDS = {
     "assmunch",
     "assmonkey",
     "assfuck",
-    "assfucker",
+    "assfucker","assfucking",
     "assface",
     "asshead",
     "dumbass",
@@ -1826,7 +1826,7 @@ BAD_WORDS = {
     "hardass",
     "arse", "arses",
     "arsehole", "arseholes",
-    "lmao",
+    "lmao","anal",
 
     # Dick family
     "dick", "dicks",
@@ -1850,13 +1850,13 @@ BAD_WORDS = {
 
     # Pussy / Cunt
     "pussy", "pussies",
-    "pussyfuck",
+    "pussyfuck", "pussyfucker","pussysucker","pussysucking",
     "twat", "twats",
     "twatwaffle",
     "twatface",
     "cunt", "cunts",
     "cuntface",
-    "cunty",
+    "cunty","cuntfucker","cuntfucking","cuntsucker","cuntsucking",
 
     # Bastard
     "bastard", "bastards",
@@ -1903,6 +1903,9 @@ BAD_WORDS = {
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
     "crack", "cracked", "cracking", 
+    "clap","clapping","clapped",
+    # toys and stuff
+    "dildo", "vibrator", "fleshlight","strap-on",
 
     # Porn family
     "porn",
@@ -1920,7 +1923,7 @@ BAD_WORDS = {
     "nutjob", "nutjobs",
 
     # No-space versions
-    "engineeringcad", "engicad", "engiecad",
+    "engineeringcad", "engicad", "engiecad", "cornso",
 }
 
 # Multi-word phrases (these need special handling)
