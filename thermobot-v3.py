@@ -1748,7 +1748,7 @@ BAD_WORDS = {
     "fuck", "fucks", "fucking", "fucked", "fucker", "fuckers",
     "motherfucker", "motherfuckers", "motherfucking",
     "motherfuckingly",
-    "fahh","fahhh","fahhhh","fahhhhh","fahhhhhh",
+    "fahh", "fahhh", "fahhhh", "fahhhhh", "fahhhhhh",
     "fuckass",
     "fuckface", "fuckfaces",
     "fuckhead", "fuckheads",
@@ -1778,8 +1778,7 @@ BAD_WORDS = {
     "shitshow",
     "shitstorm",
     "shitpost", "shitposting", "shitposter",
-    "shitload",
-    "shitloads",
+    "shitload", "shitloads",
     "shithole", "shitholes",
     "shitstain",
     "shitfaced",
@@ -1899,12 +1898,13 @@ BAD_WORDS = {
     "spunk",
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
+
     # Porn family
     "porn",
     "porno",
     "pornography",
     "pornographical",
-    "xxx", "nsfw", "hentai", "onlyfans", "pornhub","hub","phub",
+    "xxx", "nsfw", "hentai", "onlyfans", "pornhub", "hub", "phub",
     "smut",
 
     # General insults
@@ -1913,11 +1913,18 @@ BAD_WORDS = {
     "douchecanoe",
     "jerkoff", "jerkoffs",
     "nutjob", "nutjobs",
-    "dipshit",
 
-    # The worst bad word of them all (I have beef with the engineering cad server owners)
-    "engineeringcad", "engineering cad", "engicad", "engi cad", "engie cad", "engiecad",
+    # No-space versions
+    "engineeringcad", "engicad", "engiecad",
 }
+
+# Multi-word phrases (these need special handling)
+MULTI_WORD_BAD = {
+    "engineering cad",
+    "engi cad",
+    "engie cad",
+}
+
 # Actual slurs — these get censored harder / treated more strictly
 SLURS = {
     # Racial
@@ -1938,6 +1945,7 @@ SLURS = {
     "spaz", "spazz", "spastic",
     "mong", "mongoloid",
 }
+
 def censor_slur(word: str) -> str:
     """Censor only slurs (keep first + last letter)."""
     w = word.lower()
@@ -1955,9 +1963,10 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
         await interaction.followup.send("This command only works in a server.")
         return
 
-    # Combine both sets for counting
-    all_targets = BAD_WORDS | SLURS
+    # Combine everything we want to count
+    all_targets = BAD_WORDS | SLURS | MULTI_WORD_BAD
     counts = {word: 0 for word in all_targets}
+
     messages_scanned = 0
     channels_scanned = 0
 
@@ -1967,16 +1976,25 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
             continue
 
         channels_scanned += 1
+
         try:
             async for msg in channel.history(limit=800):
                 if msg.author.id != user.id or not msg.content:
                     continue
+
                 messages_scanned += 1
-                words = msg.content.lower().replace("\n", " ").split()
-                for w in words:
+                content = msg.content.lower().replace("\n", " ")
+
+                # 1. Single-word check
+                for w in content.split():
                     cleaned = w.strip(".,!?;:\"'()[]{}<>")
                     if cleaned in counts:
                         counts[cleaned] += 1
+
+                # 2. Multi-word phrase check
+                for phrase in MULTI_WORD_BAD:
+                    counts[phrase] += content.count(phrase)
+
         except (discord.Forbidden, discord.HTTPException):
             continue
 
@@ -1991,8 +2009,9 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
         )
         return
 
-    lines = ["**Word**               **# of times**"]
+    lines = ["**Word** **# of times**"]
     lines.append("─" * 34)
+
     for word, count in results:
         display = censor_slur(word) if word in SLURS else word
         lines.append(f"{display:<22} {count}")
@@ -2007,5 +2026,6 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
     embed.set_footer(
         text=f"Scanned {messages_scanned} messages across {channels_scanned} public channels (last ~800 msgs each) • Requested by {interaction.user.display_name}"
     )
+
     await interaction.followup.send(embed=embed)
-client.run(os.getenv("DISCORD_TOKEN"))
+    client.run(os.getenv("DISCORD_TOKEN"))
