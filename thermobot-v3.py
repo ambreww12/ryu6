@@ -2033,4 +2033,4 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
     )
 
     await interaction.followup.send(embed=embed)
-    client.run(os.getenv("DISCORD_TOKEN"))
+client.run(os.getenv("DISCORD_TOKEN"))
