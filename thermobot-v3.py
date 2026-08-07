@@ -1748,6 +1748,7 @@ BAD_WORDS = {
     "fuck", "fucks", "fucking", "fucked", "fucker", "fuckers",
     "motherfucker", "motherfuckers", "motherfucking",
     "motherfuckingly",
+    "fahh",
     "fuckass",
     "fuckface", "fuckfaces",
     "fuckhead", "fuckheads",
@@ -1897,6 +1898,12 @@ BAD_WORDS = {
     "spunk",
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
+    # Porn family
+    "porn",
+    "porno",
+    "pornography",
+    "pornographical",
+    "smut",
 
     # General insults
     "douche", "douches",
@@ -1906,8 +1913,8 @@ BAD_WORDS = {
     "nutjob", "nutjobs",
     "dipshit",
 
-    # The worst slur of them all (I have beef with the engineering cad server owners)
-    "engineeringcad",
+    # The worst bad word of them all (I have beef with the engineering cad server owners)
+    "engineeringcad", "engineering cad",
 }
 # Actual slurs — these get censored harder / treated more strictly
 SLURS = {
