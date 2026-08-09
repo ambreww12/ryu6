@@ -55,6 +55,17 @@ BLACKLISTED_SERVER_IDS = {
     1530684056931533002,
 }
 
+def blacklist_override_text(interaction: discord.Interaction) -> str:
+    """Return a short notice if this user is overriding a blacklisted server."""
+    if (
+        interaction.guild
+        and interaction.guild.id in BLACKLISTED_SERVER_IDS
+        and interaction.user.id in override_blacklist_userID
+    ):
+        return "\n\n🔓 Blacklist overridden"
+    return ""
+
+
 def can_award(interaction: discord.Interaction, leaderboard: str) -> bool:
     """Admins can award on either board.
     Thermo Mods can award only on thermo.
@@ -1434,9 +1445,7 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
     """Deny all slash-command service in blacklisted servers (unless user is in override list)."""
     if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
         if interaction.user.id in override_blacklist_userID:
-            # Flag so commands can append a notice to their response
-            interaction.blacklist_override = True
-            return True
+            return True  # allowed
         try:
             msg = (
                 "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
@@ -1456,58 +1465,14 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
 client.tree.interaction_check = global_interaction_check
 
 
-async def send_response(interaction: discord.Interaction, *args, **kwargs):
-    """Send a command response, appending override notice when applicable."""
-    if getattr(interaction, "blacklist_override", False):
-        suffix = "\n\n🔓 Blacklist overridden"
-        # content (positional or kw)
-        if args and isinstance(args[0], str):
-            args = (args[0] + suffix,) + args[1:]
-        elif kwargs.get("content") is not None:
-            kwargs["content"] = str(kwargs["content"]) + suffix
-        # single embed
-        emb = kwargs.get("embed")
-        if isinstance(emb, discord.Embed):
-            emb.description = (emb.description or "") + suffix
-        # embeds list
-        embs = kwargs.get("embeds")
-        if embs:
-            for em in embs:
-                if isinstance(em, discord.Embed):
-                    em.description = (em.description or "") + suffix
-                    break
-    return await interaction.response.send_message(*args, **kwargs)
-
-
-async def send_followup(interaction: discord.Interaction, *args, **kwargs):
-    """Followup variant of send_response."""
-    if getattr(interaction, "blacklist_override", False):
-        suffix = "\n\n🔓 Blacklist overridden"
-        if args and isinstance(args[0], str):
-            args = (args[0] + suffix,) + args[1:]
-        elif kwargs.get("content") is not None:
-            kwargs["content"] = str(kwargs["content"]) + suffix
-        emb = kwargs.get("embed")
-        if isinstance(emb, discord.Embed):
-            emb.description = (emb.description or "") + suffix
-        embs = kwargs.get("embeds")
-        if embs:
-            for em in embs:
-                if isinstance(em, discord.Embed):
-                    em.description = (em.description or "") + suffix
-                    break
-    return await interaction.followup.send(*args, **kwargs)
-
-
-
 @client.tree.command(name="thermo", description="Get a thermodynamics question")
 async def thermo(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🔥 HeatSO Thermodynamics",
-        description="Select a category (or Any):",
+        description="Select a category (or Any):" + blacklist_override_text(interaction),
         color=0xE85D04
     )
-    await send_response(interaction, 
+    await interaction.response.send_message(
         embed=embed,
         view=CategoryView(interaction.user.id, QUESTIONS, 0xE85D04, "🔥 HeatSO Thermodynamics")
     )
@@ -1517,10 +1482,10 @@ async def thermo(interaction: discord.Interaction):
 async def random_cmd(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🔥 HeatSO Thermodynamics",
-        description="Select a category (or Any):",
+        description="Select a category (or Any):" + blacklist_override_text(interaction),
         color=0xE85D04
     )
-    await send_response(interaction, 
+    await interaction.response.send_message(
         embed=embed,
         view=CategoryView(interaction.user.id, QUESTIONS, 0xE85D04, "🔥 HeatSO Thermodynamics")
     )
@@ -1530,10 +1495,10 @@ async def random_cmd(interaction: discord.Interaction):
 async def anatphy(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🧬 Anatomy & Physiology",
-        description="Select a category (or Any):",
+        description="Select a category (or Any):" + blacklist_override_text(interaction),
         color=0x0D9488
     )
-    await send_response(interaction, 
+    await interaction.response.send_message(
         embed=embed,
         view=CategoryView(interaction.user.id, QUESTIONS_ANATPHY, 0x0D9488, "🧬 Anatomy & Physiology")
     )
@@ -1543,10 +1508,10 @@ async def anatphy(interaction: discord.Interaction):
 async def waterquality(interaction: discord.Interaction):
     embed = discord.Embed(
         title="💧 Water Quality (Freshwater)",
-        description="Select a category (or Any):",
+        description="Select a category (or Any):" + blacklist_override_text(interaction),
         color=0x0284C7
     )
-    await send_response(interaction, 
+    await interaction.response.send_message(
         embed=embed,
         view=CategoryView(interaction.user.id, QUESTIONS_WATER, 0x0284C7, "💧 Water Quality")
     )
@@ -1556,10 +1521,10 @@ async def waterquality(interaction: discord.Interaction):
 async def wq(interaction: discord.Interaction):
     embed = discord.Embed(
         title="💧 Water Quality (Freshwater)",
-        description="Select a category (or Any):",
+        description="Select a category (or Any):" + blacklist_override_text(interaction),
         color=0x0284C7
     )
-    await send_response(interaction, 
+    await interaction.response.send_message(
         embed=embed,
         view=CategoryView(interaction.user.id, QUESTIONS_WATER, 0x0284C7, "💧 Water Quality")
     )
@@ -1573,7 +1538,7 @@ async def coinflip(interaction: discord.Interaction):
         # was gonna be an easter egg lol
         result = "Heads" if random.random() < 0.5 else "Tails"
     
-    await send_response(interaction, f"🪙 The coin landed on **{result}**!")
+    await interaction.response.send_message(f"🪙 The coin landed on **{result}**!" + blacklist_override_text(interaction))
     
 @client.tree.command(name="simvault", description="Simulate Scio.ly Vault Openings (1–10)")
 @app_commands.describe(amount="How many cases to open (1-10)")
@@ -1627,8 +1592,9 @@ async def simvault(interaction: discord.Interaction, amount: app_commands.Range[
         color=0xF59E0B  # gold-ish color
     )
     embed.set_footer(text=f"Requested by {interaction.user.display_name}")
+    embed.description = (embed.description or "") + blacklist_override_text(interaction)
 
-    await send_response(interaction, embed=embed)
+    await interaction.response.send_message(embed=embed)
 
 
 # ============================================================
@@ -1654,7 +1620,7 @@ async def awardpoint(
     board = leaderboard.value
 
     if not can_award(interaction, board):
-        await send_response(interaction, 
+        await interaction.response.send_message(
             "❌ You do not have permission to award points on this leaderboard.\n"
             "• Point modifications are **only allowed** in the designated server.\n"
             "• Required roles (in that server): **Administrator**, **Thermo Mod**, or **Circuit Mod** (matching the board).",
@@ -1673,9 +1639,10 @@ async def awardpoint(
 
     new_total = data[board][uid]
     sign = "+" if pts >= 0 else ""
-    await send_response(interaction, 
+    await interaction.response.send_message(
         f"✅ Awarded **{sign}{pts}** points to {user.mention} on the **{board}** leaderboard.\n"
         f"New total: **{new_total}** pts"
+        + blacklist_override_text(interaction)
     )
 
 
@@ -1694,8 +1661,9 @@ async def leaderboard_cmd(
     scores = data.get(board, {})
 
     if not scores:
-        await send_response(interaction, 
+        await interaction.response.send_message(
             f"📭 No points have been recorded on the **{board}** leaderboard yet."
+            + blacklist_override_text(interaction)
         )
         return
 
@@ -1716,7 +1684,8 @@ async def leaderboard_cmd(
 
     embed.description = "\n".join(lines)
     embed.set_footer(text=f"Requested by {interaction.user.display_name}")
-    await send_response(interaction, embed=embed)
+    embed.description = (embed.description or "") + blacklist_override_text(interaction)
+    await interaction.response.send_message(embed=embed)
 
 
 @client.tree.command(name="self", description="Show your own points on both leaderboards")
@@ -1734,7 +1703,8 @@ async def self_cmd(interaction: discord.Interaction):
     embed.add_field(name="🔥 Thermo", value=f"**{thermo_pts}** pts", inline=True)
     embed.add_field(name="⚡ Circuit", value=f"**{circuit_pts}** pts", inline=True)
     embed.set_footer(text="Use /leaderboard to see the top 5")
-    await send_response(interaction, embed=embed)
+    embed.description = (embed.description or "") + blacklist_override_text(interaction)
+    await interaction.response.send_message(embed=embed)
 
 
 @client.tree.command(name="fullleaderstats", description="Show every person with a nonzero score on all leaderboards")
@@ -1770,7 +1740,8 @@ async def fullleaderstats(interaction: discord.Interaction):
     )
     embed_circuit.set_footer(text=f"Requested by {interaction.user.display_name}")
 
-    await send_response(interaction, embeds=[embed_thermo, embed_circuit])
+    embed_thermo.description = (embed_thermo.description or "") + blacklist_override_text(interaction)
+    await interaction.response.send_message(embeds=[embed_thermo, embed_circuit])
 
 @client.tree.command(name="ryu6help", description="Show all commands and an overview of the bot")
 async def ryu6help(interaction: discord.Interaction):
@@ -1843,7 +1814,8 @@ async def ryu6help(interaction: discord.Interaction):
     )
 
     embed.set_footer(text=f"Requested by {interaction.user.display_name}")
-    await send_response(interaction, embed=embed)
+    embed.description = (embed.description or "") + blacklist_override_text(interaction)
+    await interaction.response.send_message(embed=embed)
 # ============================================================
 # PROFANITY SCANNER
 # ============================================================
@@ -2075,7 +2047,7 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
     await interaction.response.defer(thinking=True)
 
     if not interaction.guild:
-        await send_followup(interaction, "This command only works in a server.")
+        await interaction.followup.send("This command only works in a server." + blacklist_override_text(interaction))
         return
 
     # Combine everything we want to count
@@ -2117,10 +2089,11 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
     results.sort(key=lambda x: x[1], reverse=True)
 
     if not results:
-        await send_followup(interaction, 
+        await interaction.followup.send(
             f"No matching profanity found for {user.mention} "
             f"in the last ~800 messages of {channels_scanned} public channels "
             f"({messages_scanned} of their messages scanned)."
+            + blacklist_override_text(interaction)
         )
         return
 
@@ -2142,5 +2115,6 @@ async def checkprofanity(interaction: discord.Interaction, user: discord.Member)
         text=f"Scanned {messages_scanned} messages across {channels_scanned} public channels (last ~800 msgs each) • Requested by {interaction.user.display_name}"
     )
 
-    await send_followup(interaction, embed=embed)
+    embed.description = (embed.description or "") + blacklist_override_text(interaction)
+    await interaction.followup.send(embed=embed)
 client.run(os.getenv("DISCORD_TOKEN"))
