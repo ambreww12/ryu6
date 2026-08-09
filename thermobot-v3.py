@@ -8,6 +8,7 @@
 # STOP!!
 # NONE OF THIS CODE IS LICENSABLE.
 # USING WITHOUT PERMISSION CONSTITUTES COPYRIGHT INFRINGEMENT, PUNISHABLE BY STATUATORY DAMAGES OF $750 TO $30,000 ($150,000 IF WILLFUL).
+# You wanna risk the cost of a car over a discord bot? Yeah thats what I thought.
 # YOU HAVE BEEN WARNED!!!
 
 disable_thermoquestions = True
