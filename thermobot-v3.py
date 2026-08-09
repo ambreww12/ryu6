@@ -1413,7 +1413,6 @@ class ThermoBot(discord.Client):
         intents.members = True  # needed to resolve members for leaderboard names
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
-        # interaction_check will be assigned after the function is defined below
 
     async def setup_hook(self):
         # Global sync — works on every server the bot is in
@@ -1425,7 +1424,6 @@ class ThermoBot(discord.Client):
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
-        print(f"Blacklisted server IDs: {BLACKLISTED_SERVER_IDS}")
         print("------")
 
 client = ThermoBot()
@@ -1438,19 +1436,17 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
             if not interaction.response.is_done():
                 await interaction.response.send_message(
                     "🚫 **Server Blacklisted**",
-                    ephemeral=True,
                 )
             else:
                 await interaction.followup.send(
                     "🚫 **Server Blacklisted**",
-                    ephemeral=True,
                 )
         except Exception:
             pass
         return False
     return True
 
-# Bind the check directly (more reliable than the decorator in some setups)
+# Bind directly (more reliable than decorator)
 client.tree.interaction_check = global_interaction_check
 
 
