@@ -13,7 +13,7 @@
 # YOU HAVE BEEN WARNED!!!
 
 disable_thermoquestions = True
-
+override_blacklist_userID = {1320177605848203403, 1425965786203164693}  # user IDs allowed even in blacklisted servers
 
 import discord
 from discord import app_commands
@@ -1430,8 +1430,11 @@ client = ThermoBot()
 
 
 async def global_interaction_check(interaction: discord.Interaction) -> bool:
-    """Deny all slash-command service in blacklisted servers."""
+    """Deny all slash-command service in blacklisted servers (unless user is in override list)."""
     if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
+        # Allow specific users to bypass the server blacklist
+        if interaction.user.id in override_blacklist_userID:
+            return True
         try:
             if not interaction.response.is_done():
                 await interaction.response.send_message(
