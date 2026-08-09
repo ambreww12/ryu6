@@ -1,3 +1,12 @@
+# --- !!! ---
+# WARNING:
+# THIS CODE IS NOT LICENSABLE.
+# USING WITHOUT PERMISSION CONSTITUTES COPYRIGHT INFRINGEMENT, PUNISHABLE BY STATUATORY DAMAGES OF $750 TO $30,000 ($150,000 IF WILLFUL).
+# YOU HAVE BEEN WARNED!!!
+
+disable_thermoquestions = True
+
+
 import discord
 from discord import app_commands
 from discord.ui import Button, View, Select
@@ -30,7 +39,12 @@ def save_points(data: dict):
         json.dump(data, f, indent=2)
 
 # Only this server is allowed to modify leaderboard points
-ALLOWED_POINTS_SERVER_ID = 1530684056931533002
+ALLOWED_POINTS_SERVER_ID = 133777777777777777777777777777777777777777777777777777777777777 # effectively zero
+
+# Servers the bot will completely refuse to serve
+BLACKLISTED_SERVER_IDS = {
+    1530684056931533002,
+}
 
 def can_award(interaction: discord.Interaction, leaderboard: str) -> bool:
     """Admins can award on either board.
@@ -1186,6 +1200,17 @@ QUESTIONS_WATER = {
         "Impossible": []
     }
 }
+
+if disable_thermoquestions:
+    QUESTIONS = {
+        "Service Disabled": {
+            "Novice": [
+                ("Service is currently disabled.", ["Okay", "Understood", "Got it", "Alright"], 0),
+            ]
+        }
+    }
+    
+
 # ============================================================
 # UI CLASSES
 # ============================================================
@@ -1394,6 +1419,27 @@ class ThermoBot(discord.Client):
         print("------")
 
 client = ThermoBot()
+
+
+@client.tree.interaction_check
+async def global_interaction_check(interaction: discord.Interaction) -> bool:
+    """Deny all slash-command service in blacklisted servers."""
+    if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
+        try:
+            if not interaction.response.is_done():
+                await interaction.response.send_message(
+                    "❌ This bot is not available in this server.",
+                    ephemeral=True,
+                )
+            else:
+                await interaction.followup.send(
+                    "❌ This bot is not available in this server.",
+                    ephemeral=True,
+                )
+        except Exception:
+            pass
+        return False
+    return True
 
 
 @client.tree.command(name="thermo", description="Get a thermodynamics question")
