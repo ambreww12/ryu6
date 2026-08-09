@@ -15,6 +15,7 @@
 disable_thermoquestions = True
 override_blacklist_userID = {1320177605848203403, 1425965786203164693}  # users allowed in blacklisted servers
 
+
 import discord
 from discord import app_commands
 from discord.ui import Button, View, Select
@@ -1435,16 +1436,82 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
         # Allow specific users to bypass the server blacklist
         if interaction.user.id in override_blacklist_userID:
             notice = (
-                "🔥⚔️😎**Blacklist Overridden**\n"
-                f"`UserID {interaction.user.id}` found in `override_blacklist_userID`"
+                "🔓 **Blacklist Overridden**\n"
+                f"`UserID {interaction.user.id}` found in `override_blacklist_userID`\n\n"
             )
-            try:
-                # Send as a normal channel message so the interaction stays free for the command
-                if interaction.channel:
-                    await interaction.channel.send(notice)
-            except Exception:
-                pass
+
+            # Patch response.send_message so the notice is merged into the command output
+            original_send = interaction.response.send_message
+
+            async def patched_send(*args, **kwargs):
+                # content path
+                if args:
+                    # first positional is often content
+                    content = args[0]
+                    if isinstance(content, str):
+                        args = (notice + content,) + args[1:]
+                    elif content is None and "content" not in kwargs:
+                        kwargs["content"] = notice.rstrip()
+                if "content" in kwargs and kwargs["content"] is not None:
+                    kwargs["content"] = notice + str(kwargs["content"])
+                elif "content" not in kwargs and not args:
+                    kwargs["content"] = notice.rstrip()
+
+                # embed path — put notice at top of description
+                embed = kwargs.get("embed")
+                if embed is not None and isinstance(embed, discord.Embed):
+                    old_desc = embed.description or ""
+                    embed.description = notice + old_desc
+                    kwargs["embed"] = embed
+
+                embeds = kwargs.get("embeds")
+                if embeds and isinstance(embeds, list) and len(embeds) > 0:
+                    first = embeds[0]
+                    if isinstance(first, discord.Embed):
+                        old_desc = first.description or ""
+                        first.description = notice + old_desc
+                        embeds[0] = first
+                        kwargs["embeds"] = embeds
+
+                return await original_send(*args, **kwargs)
+
+            interaction.response.send_message = patched_send
+
+            # Also patch followup.send (used by deferred commands like checkprofanity)
+            original_followup = interaction.followup.send
+
+            async def patched_followup(*args, **kwargs):
+                if args:
+                    content = args[0]
+                    if isinstance(content, str):
+                        args = (notice + content,) + args[1:]
+                    elif content is None and "content" not in kwargs:
+                        kwargs["content"] = notice.rstrip()
+                if "content" in kwargs and kwargs["content"] is not None:
+                    kwargs["content"] = notice + str(kwargs["content"])
+                elif "content" not in kwargs and not args:
+                    kwargs["content"] = notice.rstrip()
+
+                embed = kwargs.get("embed")
+                if embed is not None and isinstance(embed, discord.Embed):
+                    old_desc = embed.description or ""
+                    embed.description = notice + old_desc
+                    kwargs["embed"] = embed
+
+                embeds = kwargs.get("embeds")
+                if embeds and isinstance(embeds, list) and len(embeds) > 0:
+                    first = embeds[0]
+                    if isinstance(first, discord.Embed):
+                        old_desc = first.description or ""
+                        first.description = notice + old_desc
+                        embeds[0] = first
+                        kwargs["embeds"] = embeds
+
+                return await original_followup(*args, **kwargs)
+
+            interaction.followup.send = patched_followup
             return True
+
         try:
             msg = (
                 "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
