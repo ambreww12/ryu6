@@ -1,5 +1,11 @@
 # --- !!! ---
-# WARNING:
+#   ███████╗████████╗ ██████╗ ██████╗ ██╗██╗
+#   ██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██║██║
+#   ███████╗   ██║   ██║   ██║██████╔╝██║██║
+#   ╚════██║   ██║   ██║   ██║██╔═══╝ ╚═╝╚═╝
+#   ███████║   ██║   ╚██████╔╝██║     ██╗██╗
+#   ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝
+# STOP!!
 # NONE OF THIS CODE IS LICENSABLE.
 # USING WITHOUT PERMISSION CONSTITUTES COPYRIGHT INFRINGEMENT, PUNISHABLE BY STATUATORY DAMAGES OF $750 TO $30,000 ($150,000 IF WILLFUL).
 # YOU HAVE BEEN WARNED!!!
