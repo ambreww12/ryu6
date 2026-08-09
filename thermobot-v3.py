@@ -6,13 +6,11 @@
 #   ███████║   ██║   ╚██████╔╝██║     ██╗██╗
 #   ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝
 # STOP!!
-# -------------------------------------------------------
-# PUBLICLY AVAILABLE CODE ≠ LICENSABLE/FREE TO USE.
-# THIS CODE IS NOT LICENSABLE.
+# JUST BECAUSE THE CODE IS PUBLICLY AVAILABLE DOES NOT MEAN YOU HAVE THE RIGHT TO USE IT.
+# NONE OF THIS CODE IS LICENSABLE.
 # USING WITHOUT PERMISSION CONSTITUTES COPYRIGHT INFRINGEMENT, PUNISHABLE BY STATUATORY DAMAGES OF $750 TO $30,000 ($150,000 IF WILLFUL).
-# You wanna risk the cost of a car over a discord bot? Yeah, that's what I thought.
+# YOU HEAR THAT? YOU WANNA RISK THE PRICE OF A CAR OVER A DISCORD BOT?
 # YOU HAVE BEEN WARNED!!!
-# -------------------------------------------------------
 
 disable_thermoquestions = True
 
