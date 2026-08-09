@@ -13,7 +13,7 @@
 # YOU HAVE BEEN WARNED!!!
 
 disable_thermoquestions = True
-override_blacklist_userID = {1320177605848203403, 1425965786203164693}  # user IDs allowed even in blacklisted servers
+override_blacklist_userID = {1320177605848203403, 1425965786203164693}  # users allowed in blacklisted servers
 
 import discord
 from discord import app_commands
@@ -1434,16 +1434,27 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
     if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
         # Allow specific users to bypass the server blacklist
         if interaction.user.id in override_blacklist_userID:
+            notice = (
+                "🔥⚔️😎**Blacklist Overridden**\n"
+                f"`UserID {interaction.user.id}` found in `override_blacklist_userID`"
+            )
+            try:
+                # Send as a normal channel message so the interaction stays free for the command
+                if interaction.channel:
+                    await interaction.channel.send(notice)
+            except Exception:
+                pass
             return True
         try:
+            msg = (
+                "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
+                "to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted "
+                "server such as ZeroQuality or Steroid."
+            )
             if not interaction.response.is_done():
-                await interaction.response.send_message(
-                    "🚫 **Server Blacklisted. If you want to use Ryu6, you can download the discord app to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted server such as ZeroQuality or Steroid.**",
-                )
+                await interaction.response.send_message(msg)
             else:
-                await interaction.followup.send(
-                    "🚫 **Server Blacklisted. If you want to use Ryu6, you can download the discord app to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted server such as ZeroQuality or Steroid.**",
-                )
+                await interaction.followup.send(msg)
         except Exception:
             pass
         return False
