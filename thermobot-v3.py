@@ -9,7 +9,7 @@
 # JUST BECAUSE THE CODE IS PUBLICLY AVAILABLE DOES NOT MEAN YOU HAVE THE RIGHT TO USE IT.
 # NONE OF THIS CODE IS LICENSABLE.
 # USING WITHOUT PERMISSION CONSTITUTES COPYRIGHT INFRINGEMENT, PUNISHABLE BY STATUATORY DAMAGES OF $750 TO $30,000 ($150,000 IF WILLFUL).
-# YOU HEAR THAT? YOU WANNA RISK THE PRICE OF A CAR OVER A DISCORD BOT? MORE THAN DOUBLE WHAT THE MEDIAN AMERICAN MAKES IN A YEAR?
+# YOU HEAR THAT? YOU WANNA RISK THE PRICE OF A CAR OVER A DISCORD BOT? DOUBLE WHAT THE MEDIAN AMERICAN MAKES IN A YEAR?
 # YOU HAVE BEEN WARNED!!!
 
 disable_thermoquestions = True
@@ -1436,12 +1436,12 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
         try:
             if not interaction.response.is_done():
                 await interaction.response.send_message(
-                    "❌ This bot is not available in this server.",
+                    "🚫 **Server Blacklisted**",
                     ephemeral=True,
                 )
             else:
                 await interaction.followup.send(
-                    "❌ This bot is not available in this server.",
+                    "🚫 **Server Blacklisted**",
                     ephemeral=True,
                 )
         except Exception:
