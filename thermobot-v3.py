@@ -62,7 +62,7 @@ def blacklist_override_text(interaction: discord.Interaction) -> str:
         and interaction.guild.id in BLACKLISTED_SERVER_IDS
         and interaction.user.id in override_blacklist_userID
     ):
-        return "\n\n🔓 Blacklist overridden"
+        return "\n\n🔓 Granted: UserID found in 'override_blacklist_userID'"
     return ""
 
 
