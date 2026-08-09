@@ -1413,6 +1413,7 @@ class ThermoBot(discord.Client):
         intents.members = True  # needed to resolve members for leaderboard names
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
+        # interaction_check will be assigned after the function is defined below
 
     async def setup_hook(self):
         # Global sync — works on every server the bot is in
@@ -1424,12 +1425,12 @@ class ThermoBot(discord.Client):
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
+        print(f"Blacklisted server IDs: {BLACKLISTED_SERVER_IDS}")
         print("------")
 
 client = ThermoBot()
 
 
-@client.tree.interaction_check
 async def global_interaction_check(interaction: discord.Interaction) -> bool:
     """Deny all slash-command service in blacklisted servers."""
     if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
@@ -1448,6 +1449,9 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
             pass
         return False
     return True
+
+# Bind the check directly (more reliable than the decorator in some setups)
+client.tree.interaction_check = global_interaction_check
 
 
 @client.tree.command(name="thermo", description="Get a thermodynamics question")
