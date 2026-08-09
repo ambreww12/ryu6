@@ -1433,39 +1433,9 @@ client = ThermoBot()
 async def global_interaction_check(interaction: discord.Interaction) -> bool:
     """Deny all slash-command service in blacklisted servers (unless user is in override list)."""
     if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
+        # Override users can still use the bot
         if interaction.user.id in override_blacklist_userID:
-            # Append a short line to the command's own response (no separate message)
-            suffix = "\n\n🔓 Blacklist overridden (`override_blacklist_userID`)"
-
-            _orig_send = interaction.response.send_message
-            async def _send(content=None, *, embed=None, embeds=None, **kwargs):
-                if content is not None:
-                    content = str(content) + suffix
-                if embed is not None and isinstance(embed, discord.Embed):
-                    embed.description = (embed.description or "") + suffix
-                if embeds:
-                    for em in embeds:
-                        if isinstance(em, discord.Embed):
-                            em.description = (em.description or "") + suffix
-                            break
-                return await _orig_send(content=content, embed=embed, embeds=embeds, **kwargs)
-            interaction.response.send_message = _send
-
-            _orig_followup = interaction.followup.send
-            async def _followup(content=None, *, embed=None, embeds=None, **kwargs):
-                if content is not None:
-                    content = str(content) + suffix
-                if embed is not None and isinstance(embed, discord.Embed):
-                    embed.description = (embed.description or "") + suffix
-                if embeds:
-                    for em in embeds:
-                        if isinstance(em, discord.Embed):
-                            em.description = (em.description or "") + suffix
-                            break
-                return await _orig_followup(content=content, embed=embed, embeds=embeds, **kwargs)
-            interaction.followup.send = _followup
             return True
-
         try:
             msg = (
                 "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
