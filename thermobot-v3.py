@@ -1435,11 +1435,11 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
         try:
             if not interaction.response.is_done():
                 await interaction.response.send_message(
-                    "🚫 **Server Blacklisted**",
+                    "🚫 **Server Blacklisted. If you want to use Ryu6, you can download the discord app to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted server such as ZeroQuality or Steroid.**",
                 )
             else:
                 await interaction.followup.send(
-                    "🚫 **Server Blacklisted**",
+                    "🚫 **Server Blacklisted. If you want to use Ryu6, you can download the discord app to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted server such as ZeroQuality or Steroid.**",
                 )
         except Exception:
             pass
