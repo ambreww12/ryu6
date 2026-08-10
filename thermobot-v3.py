@@ -1962,7 +1962,7 @@ BAD_WORDS = {
     "slut", "sluts", "slutty",
     "skank", "skanks",
     "tramp", "tramps",
-    "hoe", "hoes",
+    "hoe", "hoes", "ho",
     "thot","thots",
     
     # Religious
@@ -2002,6 +2002,7 @@ BAD_WORDS = {
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
     "crack", "cracked", "cracking", 
+    "hole", "lube", "lubricant", "holes",
     "clap","clapping","clapped",
     "shagging", "shagged", "shagger", "shag",
     # toys and stuff
