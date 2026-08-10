@@ -1466,8 +1466,8 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
             return True
         # Deny
         msg = (
-            "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
-            "to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted "
+            "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app \n"
+            "to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted \n"
             "server such as ZeroQuality or Steroid."
         )
         try:
