@@ -1237,7 +1237,7 @@ if disable_thermoquestions:
     QUESTIONS = {
         "Service Disabled": {
             "Novice": [
-                ("Service has been disabled by bot owner. [Src: Variable 'disable_thermoquestions' value set to True]", ["Okay", "Understood", "Got it", "Alright"], 0),
+                ("Service is currently disabled.", ["Okay", "Understood", "Got it", "Alright"], 0),
             ]
         }
     }
@@ -1454,16 +1454,23 @@ client = ThermoBot()
 
 
 async def global_interaction_check(interaction: discord.Interaction) -> bool:
-    """Deny all slash-command service in  servers (unless user is in override list)."""
-    if interaction.guild and interaction.guild.id in _SERVER_IDS:
+    """Deny all slash-command service in blacklisted servers (unless user is in override list)."""
+    try:
+        guild = interaction.guild
+        if guild is None:
+            return True
+        if guild.id not in BLACKLISTED_SERVER_IDS:
+            return True
+        # Blacklisted server
         if interaction.user.id in override_blacklist_userID:
-            return True  # allowed
+            return True
+        # Deny
+        msg = (
+            "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
+            "to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted "
+            "server such as ZeroQuality or Steroid."
+        )
         try:
-            msg = (
-                "🚫 **Server Blacklisted.** If you want to use Ryu6, you can download the Discord app "
-                "to use it anywhere (besides a blacklisted server) or use it through a non-blacklisted "
-                "server such as ZeroQuality or Steroid."
-            )
             if not interaction.response.is_done():
                 await interaction.response.send_message(msg)
             else:
@@ -1471,7 +1478,9 @@ async def global_interaction_check(interaction: discord.Interaction) -> bool:
         except Exception:
             pass
         return False
-    return True
+    except Exception as e:
+        print(f"interaction_check error: {e}")
+        return True  # fail open so commands still work
 
 # Bind directly (more reliable than decorator)
 client.tree.interaction_check = global_interaction_check
