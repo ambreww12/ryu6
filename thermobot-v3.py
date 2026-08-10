@@ -1997,7 +1997,7 @@ BAD_WORDS = {
     "cum", "cums", "cumming", "bust", "busting",
     "jizz",
     "spunk",
-    "blowjob", "blowy", "blowed", "head", "brain", "finger", "fingering", "fingered",
+    "blowjob", "blowy", "blowed", "head", "brain", "finger", "fingering", "fingered", "handy", "handjob",
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
     "crack", "cracked", "cracking", 
