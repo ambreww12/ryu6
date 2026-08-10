@@ -2002,6 +2002,7 @@ BAD_WORDS = {
     "goon", "gooner", "gooning",
     "crack", "cracked", "cracking", 
     "clap","clapping","clapped",
+    "shagging", "shagged", "shagger", "shag",
     # toys and stuff
     "dildo", "vibrator", "fleshlight","strap-on",
 
