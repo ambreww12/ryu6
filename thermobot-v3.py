@@ -59,10 +59,10 @@ def save_points(data: dict):
     with open(POINTS_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
-# Only this server is allowed to modify leaderboard points
-ALLOWED_POINTS_SERVER_ID = 133777777777777777777777777777777777777777777777777777777777777 # effectively zero
+# only heatso
+ALLOWED_POINTS_SERVER_ID = 1530684056931533002 # back in business baby!
 
-# Servers the bot will completely refuse to serve
+# servers the bot will refuse to serve
 BLACKLISTED_SERVER_IDS = {}
 
 def blacklist_override_text(interaction: discord.Interaction) -> str:
