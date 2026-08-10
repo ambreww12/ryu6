@@ -1843,7 +1843,7 @@ BAD_WORDS = {
     # Fuck family
     "fuck", "fucks", "fucking", "fucked", "fucker", "fuckers",
     "motherfucker", "motherfuckers", "motherfucking",
-    "motherfuckingly",
+    "motherfuckingly","mothafucka", "motherfucka",
     "fahh", "fahhh", "fahhhh", "fahhhhh", "fahhhhhh",
     "fuckass","titfuck","thighfuck","titfucker","thighfucker","titfucking","thighfucking",
     "fuckface", "fuckfaces",
