@@ -24,7 +24,7 @@
 # YOU HEAR THAT? YOU WANNA RISK THE PRICE OF A CAR OVER A DISCORD BOT? DOUBLE WHAT THE MEDIAN AMERICAN MAKES IN A YEAR?
 # YOU HAVE BEEN WARNED!!!
 
-disable_thermoquestions = False
+disable_thermoquestions = True
 override_blacklist_userID = {1320177605848203403, 1425965786203164693, 992484516016951336}  # lol
 
 
@@ -63,9 +63,7 @@ def save_points(data: dict):
 ALLOWED_POINTS_SERVER_ID = 133777777777777777777777777777777777777777777777777777777777777 # effectively zero
 
 # Servers the bot will completely refuse to serve
-BLACKLISTED_SERVER_IDS = {
-    1530684056931533002,
-}
+BLACKLISTED_SERVER_IDS = {}
 
 def blacklist_override_text(interaction: discord.Interaction) -> str:
     """Return a short notice if this user is overriding a blacklisted server."""
