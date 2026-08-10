@@ -1932,6 +1932,7 @@ BAD_WORDS = {
     "dickhole",
     "dickbag",
     "dipstick",
+    "dihh",
 
     # Cock family
     "cock", "cocks",
@@ -1944,7 +1945,7 @@ BAD_WORDS = {
     "cockblocking",
 
     # Pussy / Cunt
-    "pussy", "pussies",
+    "pussy", "pussies", "pus", "puss"
     "pussyfuck", "pussyfucker","pussysucker","pussysucking",
     "twat", "twats",
     "twatwaffle",
@@ -1993,9 +1994,10 @@ BAD_WORDS = {
 
     # Sexual slang
     "tit", "tits", "titty", "titties",
-    "cum", "cums", "cumming",
+    "cum", "cums", "cumming", "bust", "busting",
     "jizz",
     "spunk",
+    "blowjob", "blowy", "blowed", "head", "brain", "finger", "fingering", "fingered",
     "cuck", "cucks", "cuckold",
     "goon", "gooner", "gooning",
     "crack", "cracked", "cracking", 
@@ -2010,6 +2012,10 @@ BAD_WORDS = {
     "pornographical",
     "xxx", "nsfw", "hentai", "onlyfans", "pornhub", "hub", "phub",
     "smut",
+
+    # Erection family
+    "bricked",
+    "boner","boners","hard", "rager", "stiffy"
 
     # General insults
     "douche", "douches",
