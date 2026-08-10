@@ -1237,7 +1237,7 @@ if disable_thermoquestions:
     QUESTIONS = {
         "Service Disabled": {
             "Novice": [
-                ("Service is currently disabled.", ["Okay", "Understood", "Got it", "Alright"], 0),
+                ("Service has been disabled by bot owner. [Src: Variable 'disable_thermoquestions' value set to True]", ["Okay", "Understood", "Got it", "Alright"], 0),
             ]
         }
     }
@@ -1454,8 +1454,8 @@ client = ThermoBot()
 
 
 async def global_interaction_check(interaction: discord.Interaction) -> bool:
-    """Deny all slash-command service in blacklisted servers (unless user is in override list)."""
-    if interaction.guild and interaction.guild.id in BLACKLISTED_SERVER_IDS:
+    """Deny all slash-command service in  servers (unless user is in override list)."""
+    if interaction.guild and interaction.guild.id in _SERVER_IDS:
         if interaction.user.id in override_blacklist_userID:
             return True  # allowed
         try:
