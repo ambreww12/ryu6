@@ -25,7 +25,7 @@
 # YOU HAVE BEEN WARNED!!!
 
 disable_thermoquestions = True
-override_blacklist_userID = {1320177605848203403, 1425965786203164693}  # users allowed in blacklisted servers
+override_blacklist_userID = {1320177605848203403, 1425965786203164693, 992484516016951336}  # lol
 
 
 import discord
