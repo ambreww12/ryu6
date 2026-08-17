@@ -2029,6 +2029,8 @@ BAD_WORDS = {
 
     # No-space versions
     "engineeringcad", "engicad", "engiecad", "engcad","cornso",
+
+    "r&m"
 }
 
 # Multi-word phrases (these need special handling)
@@ -2037,6 +2039,13 @@ MULTI_WORD_BAD = {
     "engi cad",
     "engie cad",
     "eng cad",
+
+    "rocks and minerals",
+    "rocks & minerals",
+    "rocks and mins",
+    "rocks & mins",
+    "rocks and min",
+    "rocks & min"
 }
 
 # Actual slurs — these get censored harder / treated more strictly
